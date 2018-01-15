@@ -10,6 +10,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +21,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import model.Persona;
+import view.VistaPersonaController;
 
 /**
  *
@@ -26,9 +30,28 @@ import javafx.stage.Stage;
  */
 public class LibretaDirecciones extends Application {
     
+    private ObservableList datosPersona = FXCollections.observableArrayList();
     private Stage escenarioPrincipal;
     private BorderPane layoutPrincipal;
     private AnchorPane vistaPersona;
+    
+    //Datos de ejemplo
+    public LibretaDirecciones(){
+        
+        datosPersona.add(new Persona("Jairo", "García Rincón"));
+        datosPersona.add(new Persona("Juan", "Pérez Martínez"));
+        datosPersona.add(new Persona("Andrea", "Chenier López"));
+        datosPersona.add(new Persona("Emilio", "González Pla"));
+        datosPersona.add(new Persona("Mónica", "de Santos Sánchez"));
+
+    }
+    
+    //Método para devolver los datos como lista observable
+    public ObservableList getDatosPersona(){
+        
+        return datosPersona;
+        
+    }
     
     @Override
     public void start(Stage escenarioPrincipal) {
@@ -67,7 +90,7 @@ public class LibretaDirecciones extends Application {
     
     public void muestraVistaPersona(){
         
-         //Cargo la vista persona a partir de VistaPersona.fxml
+        //Cargo la vista persona a partir de la vista VistaPersona.fxml
         FXMLLoader loader = new FXMLLoader();
         URL location = LibretaDirecciones.class.getResource("../view/VistaPersona.fxml");
         loader.setLocation(location);
@@ -77,10 +100,14 @@ public class LibretaDirecciones extends Application {
             Logger.getLogger(LibretaDirecciones.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //Añado la vista al centro del layoutPrincipal
+        //Añado al centro del layoutPrincipal 
         layoutPrincipal.setCenter(vistaPersona);
         
+        //doy acceso al controlador VistaPersonaController a libretaDirecciones
+        VistaPersonaController controller = loader.getController();
+        controller.setLibretaDirecciones(this);
     }
+    
     //Invoco el método getPrimaryStage para que devuelva mi escenario principal
     public Stage getPrimaryStage() {
         return escenarioPrincipal;
